@@ -1,0 +1,39 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Constants
+h = 6.62607015e-34    # Planck's constant (m^2 kg / s)
+me = 9.10938356e-31   # Electron rest mass (kg)
+c = 3.0e8             # Speed of light (m/s)
+
+# Compton wavelength in meters
+compton_wavelength = h / (me * c)
+
+# Function to calculate Compton shift in meters
+def compton_shift(theta):
+    return compton_wavelength * (1 - np.cos(np.radians(theta)))
+
+# Scattering angles from 0 to 180 degrees
+angles = np.linspace(0, 180, 1000)
+
+# Calculate Compton shifts in meters and convert to picometers (1 pm = 1e-12 meters)
+shifts_pm = compton_shift(angles) * 1e12
+
+# Plotting the results
+plt.figure(figsize=(8, 8))
+plt.plot(angles, shifts_pm, label='Compton Shift', color='blue')
+
+# Professional style for axis labels
+plt.xlabel(r'Scattering Angle ($\theta$)', fontsize=14, fontweight='bold')
+plt.ylabel(r'Compton Shift ($\Delta \lambda$) (pm)', fontsize=14, fontweight='bold')
+
+# Professional style for title
+plt.title('Compton Shift as a Function of Scattering Angle',
+          fontsize=16, fontweight='bold')
+
+# Set x-axis range from 0 to 180 degrees
+plt.xlim(0, 180)
+
+plt.grid(True)
+plt.legend()
+plt.show()

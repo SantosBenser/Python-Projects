@@ -1,0 +1,46 @@
+#Python Script showing resolution of UV Catastrophe
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+# constants
+h = 6.62607015e-34   # Planck's constant (J·s)
+c = 3.0e8            # Speed of light (m/s)
+k = 1.380649e-23     # Boltzmann constant (J/K)
+T = 3000             # Temperature (K)
+
+# Frequency range (in Hz)
+frequencies = np.linspace(1e12, 1e15, 1000)
+
+# Rayleigh-Jeans Law
+def rayleigh_jeans(frequency, T):
+    return (8 * np.pi * k * T * frequency**2) / (c**3)
+
+# Planck's Law with overflow handling
+def planck(frequency, T):
+    exponent = h * frequency / (k * T)
+    return (8 * np.pi * h * frequency**3) / (
+        c**3 * (np.exp(np.clip(exponent, None, 700)) - 1)
+    )
+
+# Calculate spectral radiance
+rj_radiance = rayleigh_jeans(frequencies, T)
+planck_radiance = planck(frequencies, T)
+
+# Plotting
+plt.figure(figsize=(10, 10))
+plt.plot(frequencies / 1e12, rj_radiance,
+         label='Rayleigh-Jeans Law', color='red')
+plt.plot(frequencies / 1e12, planck_radiance,
+         label="Planck's Law", color='blue')
+
+plt.yscale('log')
+plt.xlabel('Frequency (THz)', fontsize=14, fontweight='bold')
+plt.ylabel('Spectral Energy Density (J/m$^3$Hz)',
+           fontsize=14, fontweight='bold')
+plt.title('Ultraviolet Catastrophe',
+          fontsize=16, fontweight='bold')
+
+plt.legend()
+plt.grid(True)
+plt.show()
